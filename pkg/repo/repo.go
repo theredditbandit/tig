@@ -20,8 +20,8 @@ type gitRepo struct {
 //
 // # Takes gitDir field implicitly i.e. /path/to/repo/.git is present
 //
-// eg repoPath("config") will return /path/to/repo/.git/config
-func (g *gitRepo) repoPath(pathArgs ...string) string {
+// eg RepoPath("config") will return /path/to/repo/.git/config
+func (g *gitRepo) RepoPath(pathArgs ...string) string {
 	return filepath.Join(g.gitDir, filepath.Join(pathArgs...))
 }
 
@@ -29,11 +29,11 @@ func (g *gitRepo) repoPath(pathArgs ...string) string {
 //
 // # Takes gitDir field implicitly i.e. /path/to/repo/.git is present
 //
-// eg repoFile(True,"refs","remotes","origin","HEAD") will create .git/refs/remotes/origin
-func (g *gitRepo) repoFile(mkdir bool, pathArgs ...string) (string, error) {
-	_, err := g.repoDir(mkdir, pathArgs[:len(pathArgs)-1]...)
+// eg RepoFile(True,"refs","remotes","origin","HEAD") will create .git/refs/remotes/origin
+func (g *gitRepo) RepoFile(mkdir bool, pathArgs ...string) (string, error) {
+	_, err := g.RepoDir(mkdir, pathArgs[:len(pathArgs)-1]...)
 	if err == nil {
-		return g.repoPath(pathArgs...), nil
+		return g.RepoPath(pathArgs...), nil
 	} else {
 		return "", err
 	}
@@ -42,8 +42,8 @@ func (g *gitRepo) repoFile(mkdir bool, pathArgs ...string) (string, error) {
 // return the path to the last directory in a path and optionally create it if not exists.
 //
 // # Takes gitDir field implicitly i.e. /path/to/repo/.git is present
-func (g *gitRepo) repoDir(mkdir bool, pathArgs ...string) (string, error) {
-	path := g.repoPath(pathArgs...)
+func (g *gitRepo) RepoDir(mkdir bool, pathArgs ...string) (string, error) {
+	path := g.RepoPath(pathArgs...)
 	file, pathErr := os.Stat(path)
 	if pathErr == nil { // when path exists
 		if file.IsDir() {
@@ -77,5 +77,5 @@ func (g *gitRepo) setDefaultConfig() {
 	g.conf.Set("core.repositoryformatversion", 0)
 	g.conf.Set("core.filemode", false)
 	g.conf.Set("core.bare", false)
-	g.conf.WriteConfigAs(g.repoPath("config"))
+	g.conf.WriteConfigAs(g.RepoPath("config"))
 }

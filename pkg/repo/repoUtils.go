@@ -55,10 +55,10 @@ func InitRepo(path string) (*gitRepo, error) {
 		}
 	}
 
-	_, errB := repo.repoDir(true, "branches")
-	_, errO := repo.repoDir(true, "objects")
-	_, errRT := repo.repoDir(true, "refs", "tags")
-	_, errRH := repo.repoDir(true, "refs", "heads")
+	_, errB := repo.RepoDir(true, "branches")
+	_, errO := repo.RepoDir(true, "objects")
+	_, errRT := repo.RepoDir(true, "refs", "tags")
+	_, errRH := repo.RepoDir(true, "refs", "heads")
 
 	if err := utils.CheckErrors(errB, errO, errRT, errRH); err != nil {
 		log.Error(err)
@@ -66,7 +66,7 @@ func InitRepo(path string) (*gitRepo, error) {
 	}
 
 	// write to .git/description
-	desc, err := repo.repoFile(false, "description")
+	desc, err := repo.RepoFile(false, "description")
 	if err != nil {
 		return nil, err
 	}
@@ -78,7 +78,7 @@ func InitRepo(path string) (*gitRepo, error) {
 	descFile.WriteString("Unnamed repository; edit this file 'description' to name the repository.\n")
 
 	// write to .git/HEAD
-	head, err := repo.repoFile(false, "HEAD")
+	head, err := repo.RepoFile(false, "HEAD")
 	if err != nil {
 		return nil, err
 	}
@@ -105,7 +105,7 @@ func getRepo(path string, force bool) (*gitRepo, error) {
 	if !(force || !os.IsNotExist(err)) {
 		return nil, errors.Join(ErrNotAGitRepo, errors.New(g.gitDir))
 	}
-	configPath, err := g.repoFile(false, "config") // cf should be /path/to/repo/.git/config
+	configPath, err := g.RepoFile(false, "config") // cf should be /path/to/repo/.git/config
 	if err != nil && !force {
 		return nil, err
 	}
