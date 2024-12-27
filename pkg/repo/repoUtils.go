@@ -132,6 +132,7 @@ func getRepo(path string, force bool) (*gitRepo, error) {
 //
 // usually path can be set to an empty string, then it automatically takes in the current directory.
 // require bool
+// aka repo_find
 func FindGitRepo(path string, required bool) (*gitRepo, error) {
 	if path == "" {
 		path = "."
