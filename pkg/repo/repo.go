@@ -9,8 +9,8 @@ import (
 	"github.com/spf13/viper"
 )
 
-// gitRepo struct represents a git repo
-type gitRepo struct {
+// GitRepo struct represents a git repo
+type GitRepo struct {
 	workTree string // workTree is the project repo
 	gitDir   string // git dir is the .git inside the repo i.e. /path/to/repo/.git
 	conf     *viper.Viper
@@ -21,7 +21,7 @@ type gitRepo struct {
 // # Takes gitDir field implicitly i.e. /path/to/repo/.git is present
 //
 // eg RepoPath("config") will return /path/to/repo/.git/config
-func (g *gitRepo) RepoPath(pathArgs ...string) string {
+func (g *GitRepo) RepoPath(pathArgs ...string) string {
 	return filepath.Join(g.gitDir, filepath.Join(pathArgs...))
 }
 
@@ -30,7 +30,7 @@ func (g *gitRepo) RepoPath(pathArgs ...string) string {
 // # Takes gitDir field implicitly i.e. /path/to/repo/.git is present
 //
 // eg RepoFile(True,"refs","remotes","origin","HEAD") will create .git/refs/remotes/origin
-func (g *gitRepo) RepoFile(mkdir bool, pathArgs ...string) (string, error) {
+func (g *GitRepo) RepoFile(mkdir bool, pathArgs ...string) (string, error) {
 	_, err := g.RepoDir(mkdir, pathArgs[:len(pathArgs)-1]...)
 	if err == nil {
 		return g.RepoPath(pathArgs...), nil
@@ -42,7 +42,7 @@ func (g *gitRepo) RepoFile(mkdir bool, pathArgs ...string) (string, error) {
 // return the path to the last directory in a path and optionally create it if not exists.
 //
 // # Takes gitDir field implicitly i.e. /path/to/repo/.git is present
-func (g *gitRepo) RepoDir(mkdir bool, pathArgs ...string) (string, error) {
+func (g *GitRepo) RepoDir(mkdir bool, pathArgs ...string) (string, error) {
 	path := g.RepoPath(pathArgs...)
 	file, pathErr := os.Stat(path)
 	if pathErr == nil { // when path exists
@@ -60,7 +60,7 @@ func (g *gitRepo) RepoDir(mkdir bool, pathArgs ...string) (string, error) {
 	return "", pathErr
 }
 
-func (g *gitRepo) readConfig(configPath string, force bool) error {
+func (g *GitRepo) readConfig(configPath string, force bool) error {
 	g.conf.SetConfigName("config")
 	g.conf.AddConfigPath(configPath)
 	g.conf.SetConfigType("ini")
@@ -73,7 +73,7 @@ func (g *gitRepo) readConfig(configPath string, force bool) error {
 	return nil
 }
 
-func (g *gitRepo) setDefaultConfig() {
+func (g *GitRepo) setDefaultConfig() {
 	g.conf.Set("core.repositoryformatversion", 0)
 	g.conf.Set("core.filemode", false)
 	g.conf.Set("core.bare", false)

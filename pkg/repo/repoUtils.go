@@ -22,7 +22,7 @@ var (
 )
 
 // initialize a new git repo on disk
-func InitRepo(path string) (*gitRepo, error) {
+func InitRepo(path string) (*GitRepo, error) {
 	repo, err := getRepo(path, true)
 	if err != nil {
 		log.Error(err)
@@ -96,8 +96,8 @@ func InitRepo(path string) (*gitRepo, error) {
 //
 // the path argument specifies where the git repo exists on the file system
 // the force argument forces certain operations required while repo creation only
-func getRepo(path string, force bool) (*gitRepo, error) {
-	g := gitRepo{}
+func getRepo(path string, force bool) (*GitRepo, error) {
+	g := GitRepo{}
 	g.conf = viper.GetViper()
 	g.workTree = path
 	g.gitDir = filepath.Join(path, ".git")
@@ -133,7 +133,7 @@ func getRepo(path string, force bool) (*gitRepo, error) {
 // usually path can be set to an empty string, then it automatically takes in the current directory.
 // require bool
 // aka repo_find
-func FindGitRepo(path string, required bool) (*gitRepo, error) {
+func FindGitRepo(path string, required bool) (*GitRepo, error) {
 	if path == "" {
 		path = "."
 	}
